@@ -1,45 +1,46 @@
 import React, { useState } from 'react';
-import { RootState } from '../redux/store';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../redux/reducer/authSlice';
-
-
-import Counter from './Counter';
-
+import { useLoginUserMutation } from '../redux/reducer/authApi';
+import { TextInput, Button, View, Text, StyleSheet } from 'react-native';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    //const dispatch = useDispatch();
-    //const navigate = useNavigate();
-    const token = useSelector((state: RootState) => state.auth.token);
 
-    const handleLogin = async () => {
+    const [loginUser, { isLoading, error }] = useLoginUserMutation();
 
-        loginUser(username, password);
-        // dispatch(loginUser({ username: username, password: password }));
-        //navigate('Counter');
-
+    const handleSubmit = async () => {
+        try {
+            
+            const { data } = await loginUser({ username, password });
+            
+        } catch (error) {
+            console.error('Login failed:', error.message);
+        }
     };
 
     return (
+
+
         <View style={styles.container}>
-            <Text style={styles.title}>Login</Text>
             <TextInput
                 style={styles.input}
                 placeholder="Username"
                 value={username}
-                onChangeText={(text) => setUsername(text)}
+                onChangeText={setUsername}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Password"
-                secureTextEntry
                 value={password}
-                onChangeText={(text) => setPassword(text)}
+                onChangeText={setPassword}
+                secureTextEntry
             />
-            <Button title="Login" onPress={handleLogin} />
+            <Button
+                title={isLoading ? 'Logging in...' : 'Login'}
+                onPress={handleSubmit}
+                disabled={isLoading}
+            />
+            {error && <Text style={styles.error}>Error: {error.message}</Text>}
         </View>
     );
 };
@@ -49,19 +50,20 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
+        padding: 20,
     },
     input: {
-        width: '80%',
+        width: '100%',
         height: 40,
-        borderColor: 'gray',
         borderWidth: 1,
+        borderColor: 'gray',
         borderRadius: 5,
         marginBottom: 10,
-        paddingLeft: 10,
+        paddingHorizontal: 10,
+    },
+    error: {
+        color: 'red',
+        marginTop: 10,
     },
 });
 

@@ -1,3 +1,41 @@
+
+
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { RootState } from '../store';
+
+interface LoginInput {
+  username: string;
+  password: string;
+}
+
+interface TokenResponse {
+  token: string;
+}
+
+export const authApi = createApi({
+  reducerPath: 'authApi',
+  // All of our requests will have URLs starting with '/fakeApi'
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000' }),
+  endpoints: (builder) => ({
+    loginUser: builder.mutation<TokenResponse, LoginInput>({
+      query: ({ username, password }) => ({
+        url: '/users/login',
+        method: 'POST',
+        body: { username, password },
+      }),
+    }),
+  }),
+});
+
+export const { useLoginUserMutation } = authApi;
+
+//export const selectToken = (state: RootState) => state.authApi.loginUser.data?.token;
+
+
+
+
+
+/*
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState, AppThunk } from '../store';
@@ -32,7 +70,7 @@ export const loginUser = (username: string, password: string): AppThunk => async
 
     }
 };
-//with queryBuilder
+//with queryBuilder ??
 
 
 export const selectToken = (state: RootState) => state.auth.token;
@@ -40,47 +78,7 @@ export const selectToken = (state: RootState) => state.auth.token;
 export default authSlice.reducer;
 
 
-
-
-/*import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { AppThunk } from '../store';
-
-interface AuthState {
-  token: string | null;
-}
-
-const initialState: AuthState = {
-  token: null,
-};
-
-const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: {
-    setToken(state, action: PayloadAction<string | null>) {
-      state.token = action.payload;
-    },
-  },
-});
-
-export const { setToken } = authSlice.actions;
-
-export default authSlice.reducer;
-
-export const loginUser = (username: string, password: string): AppThunk => async (dispatch) => {
-  try {
-    const response = await axios.post('http://localhost:3000/users/login', { username, password });
-    dispatch(setToken(response.data.token));
-  } catch (error) {
-    console.error('Login failed:', error.message);
-    // Handle error (e.g., show error message)
-  }
-};
-
 */
-
-
 
 /*
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
