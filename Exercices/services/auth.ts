@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { RootState } from '../redux/store'
 
 export interface User {
+    id: number
     email: string
     phoneNumber: number
     name: string
@@ -25,9 +26,9 @@ export interface LoginRequest {
 
 export const api = createApi({
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3000/auth',
+        baseUrl: 'http://10.0.2.2:3000/auth',
         prepareHeaders: (headers, { getState }) => {
-            // By default, if we have a token in the store, let's use that for authenticated requests
+
             const token = (getState() as RootState).auth.token
             if (token) {
                 headers.set('authorization', `Bearer ${token}`)
@@ -35,6 +36,8 @@ export const api = createApi({
             return headers
         },
     }),
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
     endpoints: (builder) => ({
         login: builder.mutation<UserResponse, LoginRequest>({
             query: (credentials) => ({

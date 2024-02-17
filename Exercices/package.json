@@ -10,11 +10,11 @@
     "test": "jest"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-async-storage/async-storage": "^1.22.0",
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/native-stack": "^6.9.18",
     "@react-navigation/stack": "^6.3.21",
-    "@reduxjs/toolkit": "^2.2.0",
+    "@reduxjs/toolkit": "^2.2.1",
     "axios": "^1.6.7",
     "msw": "^2.2.0",
     "react": "18.2.0",
